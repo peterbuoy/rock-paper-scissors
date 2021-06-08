@@ -4,15 +4,24 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Rock Paper Scissors</title>
+	<link rel='stylesheet' href="styles.css">
+	<title>Rock, Paper, Scissors</title>
 </head>
 <body>
-
-	<button type='button' id='btn_rock' class="button-hand">Rock</button>
-	<button type='button' id='btn_paper' class="button-hand">Paper</button>
-	<button type='button' id='btn_scissors' class="button-hand">Scissors</button>
-	<button type='button' id='btn_restart' disabled>Restart</button>
-
+	<div id='game_box'>
+		<div>
+			<button type='button' id='btn_rock' class="button-hand">Rock</button>
+		</div>
+		<div>
+			<button type='button' id='btn_paper' class="button-hand">Paper</button>
+		</div>
+		<div>
+			<button type='button' id='btn_scissors' class="button-hand">Scissors</button>
+		</div>
+		<div>
+			<button type='button' id='btn_restart' disabled>Restart</button>
+		</div>
+	</div>
 	<div id="result_container"></div>
 
 	<script src="script.js"></script>

@@ -1,64 +1,59 @@
 let hands = ['Rock', 'Paper', 'Scissors']
-let playerSelection = ''
-let playerScore = 0, computerScore = 0, round = 1
+let playerScore = 0, computerScore = 0
 
-const btn_rock = document.querySelector('#btn_rock');
-const btn_paper = document.querySelector('#btn_paper');
-const btn_scissors = document.querySelector('#btn_scissors');
-const btn_reset = document.querySelector('#btn_restart')
-btn_rock.addEventListener('click', () => {
+const ROCK_BUTTON = document.querySelector('#btn_rock');
+const PAPER_BUTTON = document.querySelector('#btn_paper');
+const SCISSORS_BUTTON = document.querySelector('#btn_scissors');
+const RESTART_BUTTON = document.getElementById('btn_restart')
+const RESULT_CONTAINER = document.querySelector('#result_container')
+const BUTTON_HAND = document.getElementsByClassName('button-hand');
+
+ROCK_BUTTON.addEventListener('click', () => {
 	playRound('Rock', computerPlay())
 });
-btn_paper.addEventListener('click', () => {
+PAPER_BUTTON.addEventListener('click', () => {
 	playRound('Paper', computerPlay())
 });
-btn_scissors.addEventListener('click', () => {
+SCISSORS_BUTTON.addEventListener('click', () => {
 	playRound('Scissors', computerPlay())
 });
 btn_restart.addEventListener('click', () => {
-	const restartButton = document.getElementById('btn_restart')
-	const result_container = document.querySelector('#result_container')
-	result_container.textContent = '';
+	RESULT_CONTAINER.textContent = '';
 	playerScore = 0;
 	computerScore = 0;
-	restartButton.disabled = true;
-	const buttons = document.getElementsByClassName('button-hand');
-			for (let i = 0; i < buttons.length; i++) {
-				buttons[i].disabled = false;
+	RESTART_BUTTON.disabled = true;
+			for (let i = 0; i < BUTTON_HAND.length; i++) {
+				BUTTON_HAND[i].disabled = false;
 			}
-	
 });
 
-// game()
-
-// function game() {
-// 	for (let i = 0; i < 5; i++) {
-// 	 	playerSelection = prompt("Rock, Paper, Scissors?")
-// 		console.log(`Round ${round++}`);
-// 		computerSelection = computerPlay()
-// 		console.log(playRound(playerSelection, computerSelection))
-// 		console.log(`Player: ${playerScore}, Computer: ${computerScore}`);
-// 		console.log();
-// 	}
-// 	determineResult(playerScore, computerScore)
-// }
+function checkWinningScore(playerScore, computerScore) {
+	if (playerScore == 5 || computerScore == 5) {
+		const WINNER_MESSAGE = document.createElement('div');
+		WINNER_MESSAGE.style.color = 'red';
+		if (playerScore == 5) WINNER_MESSAGE.textContent = `Player won the game!`
+		if (computerScore == 5) WINNER_MESSAGE.textContent = `Computer won the game!`
+		for (let i = 0; i < BUTTON_HAND.length; i++) {
+			BUTTON_HAND[i].disabled = true;
+		}
+		RESULT_CONTAINER.appendChild(WINNER_MESSAGE)
+		RESTART_BUTTON.disabled = false;
+	}
+}
 
 function playRound(playerSelection, computerSelection) {
-	const result_container = document.querySelector('#result_container')
 	playerSelection = normalizePlayerSelection(playerSelection)
-	result_container.textContent = `You chose ${playerSelection} `;
-	result_container.textContent += `Computer chose ${computerSelection}`
-	console.log(`You chose ${playerSelection}`);
-	console.log(`Computer chose ${computerSelection}`)
-
+	const RESULT_OUTCOME = document.createElement('div');
+	const RESULT_SCORE = document.createElement('div');
+	RESULT_CONTAINER.textContent = `You chose ${playerSelection} `;
+	RESULT_CONTAINER.textContent += `Computer chose ${computerSelection}`
+	
 	// Tie
 	if (playerSelection == computerSelection) {
-		const resultOutcome = document.createElement('div');
-		resultOutcome.textContent = `You tied because you both chose ${playerSelection}`
-		result_container.appendChild(resultOutcome);
-		const resultScore = document.createElement('div');
-		resultScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`
-		result_container.appendChild(resultScore);
+		RESULT_OUTCOME.textContent = `It's a tie!`
+		RESULT_SCORE.textContent = `Player: ${playerScore} Computer: ${computerScore}`
+		RESULT_CONTAINER.appendChild(RESULT_OUTCOME);
+		RESULT_CONTAINER.appendChild(RESULT_SCORE);
 	} 
 	// Lose
 	else if (
@@ -66,46 +61,22 @@ function playRound(playerSelection, computerSelection) {
 		(playerSelection == 'Paper' && computerSelection == 'Scissors') ||
 		(playerSelection == 'Scissors' && computerSelection == 'Rock')
 		) {
-		const resultOutcome = document.createElement('div');
-		resultOutcome.textContent = `You lost! ${computerSelection} beats ${playerSelection}`;
-		result_container.appendChild(resultOutcome);
 		computerScore++;
-		const resultScore = document.createElement('div');
-		resultScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`
-		result_container.appendChild(resultScore);
-		if (computerScore == 5) {
-			const winnerMessage = document.createElement('div');
-			winnerMessage.textContent = `Computer won the game!`
-			result_container.appendChild(winnerMessage)
-			const buttons = document.getElementsByClassName('button-hand');
-			for (let i = 0; i < buttons.length; i++) {
-				buttons[i].disabled = true;
-			}
-			const restartButton = document.getElementById('btn_restart');
-			restartButton.disabled = false;
-		}
+		RESULT_OUTCOME.textContent = `You lost! ${computerSelection} beats ${playerSelection}`;
+		RESULT_SCORE.textContent = `Player: ${playerScore} Computer: ${computerScore}`
+		RESULT_CONTAINER.appendChild(RESULT_OUTCOME);
+		RESULT_CONTAINER.appendChild(RESULT_SCORE);
+		checkWinningScore(playerScore, computerScore);
 		return `You lost! ${computerSelection} beats ${playerSelection}`
 	} 
 	// Win
 	else {
 		playerScore++
-		const resultOutcome = document.createElement('div');
-		resultOutcome.textContent = `You won! ${playerSelection} beats ${computerSelection}`;
-		result_container.appendChild(resultOutcome);
-		const resultScore = document.createElement('div');
-		resultScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`
-		result_container.appendChild(resultScore);
-		if (playerScore == 5) {
-			const winnerMessage = document.createElement('div');
-			winnerMessage.textContent = `You won the game!`
-			result_container.appendChild(winnerMessage)
-			const buttons = document.getElementsByClassName('button-hand');
-			for (let i = 0; i < buttons.length; i++) {
-				buttons[i].disabled = true;
-			}
-			const restartButton = document.getElementById('btn_restart');
-			restartButton.disabled = false;
-		}
+		RESULT_OUTCOME.textContent = `You won! ${playerSelection} beats ${computerSelection}`;
+		RESULT_SCORE.textContent = `Player: ${playerScore} Computer: ${computerScore}`
+		RESULT_CONTAINER.appendChild(RESULT_OUTCOME);
+		RESULT_CONTAINER.appendChild(RESULT_SCORE);
+		checkWinningScore(playerScore, computerScore);
 		return `You won! ${playerSelection} beats ${computerSelection}`
 	}
 }
@@ -121,20 +92,14 @@ function determineResult(playerScore, computerScore) {
 		console.log(`Computer wins! ${computerScore} to ${playerScore}`);
 	}
 }
-
+// hello
 function computerPlay() {
+	///hello
+	/* returns strings*/
 	return hands[Math.floor(Math.random() * hands.length)]
 }
 
 // transforms user input into proper case (first capitalized, rest lowercase)
 function normalizePlayerSelection(playerSelection) {
 	return playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1);
-}
-
-function loseMessage(playerSelection, computerSelection) {
-	return `You lost! ${computerSelection} beats ${playerSelection}`
-}
-
-function winMessage(playerSelection, computerSelection) {
-	return `You win! ${playerSelection} beats ${computerSelection}`
 }
